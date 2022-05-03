@@ -1,24 +1,22 @@
-const library = [];
-
 const displayBooksTable = document.getElementById("display-books");
+displayBooksTable.addEventListener("click", (event) => {
+  removeBook(event.target);
+})
+
+const tableBodyBooksTable = displayBooksTable.querySelector('tbody');
 
 const newBookButton = document.getElementById("create-book");
-newBookButton.addEventListener("click", displayAddForm)
-
-const removeBookButton = document.getElementById("remove-book");
-removeBookButton.addEventListener("click", populateRemoveForm)
+newBookButton.addEventListener("click", toggleAddForm)
 
 const addBookForm = document.getElementById("add-book-form");
 addBookForm.addEventListener("submit", (event) => {
   event.preventDefault();
   addBook();
+  toggleAddForm();
 })
 
-const removeBookForm = document.getElementById("remove-book-form");
-removeBookForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  removeBook();
-})
+const backgroundDrop = document.getElementById("background-drop");
+const divContainer = document.querySelector(".container");
 
 class Book {
   constructor(author="", title="", pages=0, isRead=false) {
@@ -29,31 +27,10 @@ class Book {
   }
 }
 
-function addBookToLibrary() {
-  for(let book of arguments) {
-    library.push(book)
-  }
-}
-
-function displayBooks() {
-  let newTableBody = document.createElement('tbody');
-  let oldTableBody = displayBooksTable.querySelector('tbody');
-
-  for(let book of library) {
-    let row = newTableBody.insertRow(-1);
-
-    for(let key in book) {
-      let cell = row.insertCell(-1);
-      cell.innerHTML = book[key];
-    }
-  }
-
-  displayBooksTable.replaceChild(newTableBody, oldTableBody)
-}
-
-
-function displayAddForm() {
-  console.log("gonna pop up form here!")
+function toggleAddForm() {
+  addBookForm.classList.toggle('show');
+  backgroundDrop.classList.toggle('show');
+  divContainer.classList.toggle('hidden')
 }
 
 function addBook() {
@@ -69,41 +46,23 @@ function addBook() {
    isRead = true
   }
 
-  const book = new Book(author, title, pages, isRead)
+  bookToAdd = new Book(author, title, pages, isRead);
 
-  addBookToLibrary(book);
-  displayBooks();
-}
-
-function populateRemoveForm() {
-  removeBookForm.innerHTML = ""
-
-  for(let i = 0; i < library.length; i++) {
-    let book = library[i];
-
-    let checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.name = "remove-books";
-    checkbox.value = i;
-    checkbox.id = `book-index-${i}`
-
-    let label = document.createElement('label');
-    label.htmlFor = `book-index-${i}`;
-    label.appendChild(document.createTextNode(`${book.title}`));
-
-    removeBookForm.appendChild(checkbox);
-    removeBookForm.appendChild(label);
+  let newRow = tableBodyBooksTable.insertRow(-1);
+  
+  for(let key in bookToAdd) {
+    let newCell = newRow.insertCell(-1);
+    newCell.innerHTML = bookToAdd[key];
   }
 
-  let submitButton = document.createElement("button");
-  submitButton.type = "submit"
-  submitButton.innerText = "Remove choosen books"
+  let deleteBookCell = newRow.insertCell(-1);
+  deleteBookCell.innerHTML = `<button class="delete-button">X</button>`;
 
-  removeBookForm.appendChild(submitButton)
+  tableBodyBooksTable.appendChild(newRow);
 }
 
-function removeBook() {
-  console.log("Gonna remove book from library");
+function removeBook(element) {
+  if(element.classList.contains('delete-button')){
+    element.parentElement.parentElement.remove();
+  }
 }
-
-displayBooks();
