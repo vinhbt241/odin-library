@@ -93,7 +93,7 @@ th, td {
   padding: 10px 0;
 }
 
-.delete-button {
+.delete-book {
   width: 30px;
   height: 30px;
   background-color: red;
@@ -107,6 +107,15 @@ th, td {
   padding: 5px;
   background-color: #000;
   color:#fff;
+  font-size: 18px;
+  border-radius: 5px;
+  border: none;
+}
+
+.toggle-read-mode {
+  width: 30px;
+  height: 30px;
+  background-color: greenyellow;
   font-size: 18px;
   border-radius: 5px;
   border: none;

@@ -1,6 +1,10 @@
 const displayBooksTable = document.getElementById("display-books");
 displayBooksTable.addEventListener("click", (event) => {
-  removeBook(event.target);
+  if (event.target.classList.contains('delete-book')) {
+    removeBook(event.target);
+  } else if(event.target.classList.contains('toggle-read-mode')) {
+    toggleReadMode(event.target);
+  }
 })
 
 const tableBodyBooksTable = displayBooksTable.querySelector('tbody');
@@ -56,13 +60,18 @@ function addBook() {
   }
 
   let deleteBookCell = newRow.insertCell(-1);
-  deleteBookCell.innerHTML = `<button class="delete-button">X</button>`;
+  deleteBookCell.innerHTML = `<button class="delete-book">X</button>`;
+  let toggleReadModeCell = newRow.insertCell(-1);
+  toggleReadModeCell.innerHTML = `<button class="toggle-read-mode">T</button>`;
 
   tableBodyBooksTable.appendChild(newRow);
 }
 
 function removeBook(element) {
-  if(element.classList.contains('delete-button')){
-    element.parentElement.parentElement.remove();
-  }
+  element.parentElement.parentElement.remove();
+}
+
+function toggleReadMode(element) {
+  readMode = element.parentElement.parentElement.cells[3];
+  readMode.innerText = (readMode.innerText == "true") ? "false" : "true";
 }
